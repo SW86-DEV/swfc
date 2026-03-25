@@ -15,24 +15,24 @@ jobs:
             const pr = context.payload.pull_request;
             const { owner, repo } = context.repo;
 
-            const commits = await github.paginate(
-              github.rest.pulls.listCommits,
-              {
-                owner,
-                repo,
-                pull_number: pr.number,
-                per_page: 100
-              }
-            );
+            const commits = await github.rest.pulls.listCommits({
+  owner: context.repo.owner,
+  repo: context.repo.repo,
+  pull_number: context.payload.pull_request.number
+});
 
-            const pattern = /^(feat|fix|chore)\(M[0-9]{3}\.[0-9]{2}\): .+/;
+for (const commit of commits.data) {
+  const message = commit.commit.message;
 
-            for (const c of commits) {
-              const msg = c.commit.message.split('\n')[0];
-              core.info(`Checking: ${msg}`);
+  core.info(`Checking: ${message}`);
 
-              if (!pattern.test(msg)) {
-                core.setFailed(`Invalid commit message: ${msg}`);
-                return;
-              }
-            }
+  // Regel 1: erlaubte Standard-Commits
+  const validStandard = /^(feat|fix|chore)\(M[0-9]{3}\.[0-9]{2}\):/.test(message);
+
+  // Regel 2: erlaubte Merge-Commits
+  const validMerge = message.startsWith("Merge");
+
+  if (!validStandard && !validMerge) {
+    core.setFailed(`Invalid commit message: ${message}`);
+  }
+}
