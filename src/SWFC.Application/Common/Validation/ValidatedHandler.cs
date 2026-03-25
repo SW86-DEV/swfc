@@ -13,19 +13,24 @@ public abstract class ValidatedHandler<TCommand, TResult>
         _validator = validator;
     }
 
-    public Result<TResult> Handle(TCommand command)
+    public async Task<Result<TResult>> HandleAsync(
+        TCommand command,
+        CancellationToken cancellationToken = default)
     {
         var validation = _validator.Validate(command);
 
         if (!validation.IsValid)
         {
             return Result<TResult>.Failure(
-                new Error(ErrorCodes.Validation.Failed, "Validation failed.", ErrorCategory.Validation));
+                new Error(
+                    ErrorCodes.Validation.Failed,
+                    "Validation failed.",
+                    ErrorCategory.Validation));
         }
 
         try
         {
-            return Execute(command);
+            return await ExecuteAsync(command, cancellationToken);
         }
         catch (ValidationException ex)
         {
@@ -49,5 +54,7 @@ public abstract class ValidatedHandler<TCommand, TResult>
         }
     }
 
-    protected abstract Result<TResult> Execute(TCommand command);
+    protected abstract Task<Result<TResult>> ExecuteAsync(
+        TCommand command,
+        CancellationToken cancellationToken);
 }

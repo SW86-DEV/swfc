@@ -19,4 +19,11 @@ public static class ErrorCodes
     {
         public const string Failed = "VALIDATION_FAILED";
     }
+
+    // 🔴 NEU (M802)
+    public static class Security
+    {
+        public const string AccessDenied = "SEC_ACCESS_DENIED";
+        public const string NotAuthenticated = "SEC_NOT_AUTHENTICATED";
+    }
 }

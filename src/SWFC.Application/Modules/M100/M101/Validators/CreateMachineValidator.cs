@@ -17,9 +17,6 @@ public sealed class CreateMachineValidator : ICommandValidator<CreateMachineComm
         if (string.IsNullOrWhiteSpace(command.Name))
             result.Add(ErrorCodes.Machine.NameRequired, nameof(command.Name), "Name is required.");
 
-        if (string.IsNullOrWhiteSpace(command.ActorId))
-            result.Add(ErrorCodes.General.ContextRequired, nameof(command.ActorId), "ActorId is required.");
-
         if (string.IsNullOrWhiteSpace(command.Reason))
             result.Add("MACHINE_REASON_REQUIRED", nameof(command.Reason), "Reason is required.");
 
