@@ -1,8 +1,14 @@
+
 using SWFC.Application.Common.Validation;
 using SWFC.Application.Modules.M100.M101.Commands;
 using SWFC.Domain.Common.Errors;
 using SWFC.Domain.Common.Exceptions;
 using SWFC.Domain.Common.Results;
+
+using SWFC.Application.Modules.M100.M101.Commands;
+using SWFC.Domain.Common.Results;
+using SWFC.Domain.Common.Errors;
+
 using SWFC.Domain.Common.Security;
 using SWFC.Domain.Modules.M100.M101.Entities;
 using SWFC.Domain.Modules.M100.M101.ValueObjects;
@@ -11,6 +17,7 @@ namespace SWFC.Application.Modules.M100.M101.Handlers;
 
 public sealed class CreateMachineHandler
 {
+
     private readonly ICommandValidator<CreateMachineCommand> _validator;
 
     public CreateMachineHandler(ICommandValidator<CreateMachineCommand> validator)
@@ -28,6 +35,10 @@ public sealed class CreateMachineHandler
                 new Error("VALIDATION_FAILED", "Validation failed.", ErrorCategory.Validation));
         }
 
+
+    public Result<Machine> Handle(CreateMachineCommand command)
+    {
+
         try
         {
             var name = MachineName.Create(command.Name);
@@ -44,6 +55,7 @@ public sealed class CreateMachineHandler
 
             return Result<Machine>.Success(machine);
         }
+
         catch (ValidationException ex)
         {
             return Result<Machine>.Failure(
@@ -66,3 +78,13 @@ public sealed class CreateMachineHandler
         }
     }
 }
+
+        catch (Exception ex)
+        {
+            return Result<Machine>.Failure(
+                new Error("APP_ERROR", ex.Message, ErrorCategory.Technical));
+        }
+    }
+}
+
+
