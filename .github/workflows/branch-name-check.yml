@@ -13,10 +13,11 @@ jobs:
         with:
           script: |
             const branch = context.payload.pull_request.head.ref;
-            const pattern = /^(feature|fix|chore)\/M[0-9]{3}\.[0-9]{2}-[a-z0-9-]+$/;
 
-            core.info(Checking branch: );
+            core.info(`Checking branch: ${branch}`);
+
+            const pattern = /^(feature|fix|chore)\/M[0-9]{3}\.[0-9]{2}-[a-z0-9\-]+$/;
 
             if (!pattern.test(branch)) {
-              core.setFailed(Invalid branch name: );
+              core.setFailed(`Invalid branch name: ${branch}`);
             }
