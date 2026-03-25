@@ -1,0 +1,23 @@
+name: Commit Message Check
+
+on:
+  pull_request:
+
+jobs:
+  commit-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check commit messages
+      run: |
+        echo "Checking commit messages..."
+        commits=
+
+        for commit in ; do
+          echo "Checking: "
+
+          if [[ ! "" =~ ^(feat|fix|chore)\(M[0-9]{3}\.[0-9]{2}\): ]]; then
+            echo "? Invalid commit message: "
+            exit 1
+          fi
+        done
