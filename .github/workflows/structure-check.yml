@@ -1,0 +1,53 @@
+name: Structure Check
+
+on:
+  pull_request:
+
+jobs:
+  structure-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate repository structure
+        shell: bash
+        run: |
+          set -e
+
+          echo "Checking /src..."
+          if [ -d src ]; then
+            find src -mindepth 1 -maxdepth 1 -type f | grep . && {
+              echo "? Loose files directly under src are not allowed."
+              exit 1
+            } || true
+
+            for dir in src/*; do
+              [ -d "$dir" ] || continue
+              name=$(basename "$dir")
+              if [[ ! "$name" =~ ^SWFC\..+ ]]; then
+                echo "? Invalid directory under src: $name"
+                exit 1
+              fi
+            done
+          fi
+
+          echo "Checking /tests..."
+          if [ -d tests ]; then
+            find tests -mindepth 1 -maxdepth 1 -type f | grep . && {
+              echo "? Loose files directly under tests are not allowed."
+              exit 1
+            } || true
+
+            for dir in tests/*; do
+              [ -d "$dir" ] || continue
+              name=$(basename "$dir")
+              if [[ ! "$name" =~ Test|Tests ]]; then
+                echo "? Invalid directory under tests: $name"
+                exit 1
+              fi
+            done
+          fi
+
+          echo "? Structure check passed."
