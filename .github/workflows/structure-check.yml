@@ -16,13 +16,29 @@ jobs:
         run: |
           set -e
 
+          echo "Checking root structure..."
+
+          allowed_dirs=(".git" ".github" "build" "docs" "src" "tests")
+          allowed_files=(".editorconfig" ".gitignore" "README.md" "SWFC.slnx")
+
+          for item in * .*; do
+            [ "$item" = "." ] || [ "$item" = ".." ] && continue
+
+            if [ -d "$item" ]; then
+              if [[ ! " ${allowed_dirs[@]} " =~ " $item " ]]; then
+                echo "? Invalid root directory: $item"
+                exit 1
+              fi
+            elif [ -f "$item" ]; then
+              if [[ ! " ${allowed_files[@]} " =~ " $item " ]]; then
+                echo "? Invalid root file: $item"
+                exit 1
+              fi
+            fi
+          done
+
           echo "Checking /src..."
           if [ -d src ]; then
-            find src -mindepth 1 -maxdepth 1 -type f | grep . && {
-              echo "? Loose files directly under src are not allowed."
-              exit 1
-            } || true
-
             for dir in src/*; do
               [ -d "$dir" ] || continue
               name=$(basename "$dir")
@@ -35,11 +51,6 @@ jobs:
 
           echo "Checking /tests..."
           if [ -d tests ]; then
-            find tests -mindepth 1 -maxdepth 1 -type f | grep . && {
-              echo "? Loose files directly under tests are not allowed."
-              exit 1
-            } || true
-
             for dir in tests/*; do
               [ -d "$dir" ] || continue
               name=$(basename "$dir")
