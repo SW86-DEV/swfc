@@ -25,7 +25,7 @@ public sealed class CreateMachineHandler
         if (!validation.IsValid)
         {
             return Result<Machine>.Failure(
-                new Error("VALIDATION_FAILED", "Validation failed.", ErrorCategory.Validation));
+                new Error(ErrorCodes.Validation.Failed, "Validation failed.", ErrorCategory.Validation));
         }
 
         try
