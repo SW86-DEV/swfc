@@ -18,7 +18,7 @@ jobs:
 
           echo "Checking root structure..."
 
-          allowed_dirs=(".github" "build" "docs" "src" "tests")
+          allowed_dirs=(".git" ".github" "build" "docs" "src" "tests")
           allowed_files=(".editorconfig" ".gitignore" "README.md" "SWFC.slnx")
 
           for item in * .*; do
