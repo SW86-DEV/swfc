@@ -29,10 +29,10 @@ jobs:
 
             for (const c of commits) {
               const msg = c.commit.message.split('\n')[0];
-              core.info(Checking: );
+              core.info(`Checking: ${msg}`);
 
               if (!pattern.test(msg)) {
-                core.setFailed(Invalid commit message: );
+                core.setFailed(`Invalid commit message: ${msg}`);
                 return;
               }
             }
