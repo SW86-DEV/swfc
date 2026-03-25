@@ -1,3 +1,4 @@
+using SWFC.Application.Modules.M100.M101.Commands;
 using SWFC.Domain.Common.Results;
 using SWFC.Domain.Common.Errors;
 using SWFC.Domain.Common.Security;
@@ -33,3 +34,4 @@ public sealed class CreateMachineHandler
         }
     }
 }
+
