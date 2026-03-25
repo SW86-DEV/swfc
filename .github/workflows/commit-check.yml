@@ -25,7 +25,7 @@ jobs:
               }
             );
 
-            const pattern = /^(feat|fix|chore)\(M[0-9]{3}\.[0-9]{2}\): .+/;
+            const pattern = /^(feat|fix|chore)\(M[0-9]{3}\.[0-9]{2}\): .+|^Merge .+/;
 
             for (const c of commits) {
               const msg = c.commit.message.split('\n')[0];
