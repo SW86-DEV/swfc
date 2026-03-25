@@ -1,0 +1,48 @@
+name: Architecture Check
+
+on:
+  pull_request:
+
+jobs:
+  architecture-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate project references
+        shell: bash
+        run: |
+          set -e
+
+          echo "Checking architecture rules..."
+
+          # DOMAIN darf nichts referenzieren auﬂer sich selbst
+          for file in $(find src -name "SWFC.Domain.csproj"); do
+            if grep -q "<ProjectReference" "$file"; then
+              echo "? Domain must not have project references"
+              exit 1
+            fi
+          done
+
+          # APPLICATION darf nur Domain referenzieren
+          for file in $(find src -name "SWFC.Application.csproj"); do
+            if grep -q "Infrastructure" "$file" || grep -q "Web" "$file"; then
+              echo "? Application must not reference Infrastructure or Web"
+              exit 1
+            fi
+          done
+
+          # INFRASTRUCTURE darf Domain + Application referenzieren
+          # (kein Check nˆtig ñ erlaubt)
+
+          # WEB darf nur Application + Infrastructure referenzieren
+          for file in $(find src -name "SWFC.Web.csproj"); do
+            if grep -q "Domain" "$file"; then
+              echo "? Web must not reference Domain directly"
+              exit 1
+            fi
+          done
+
+          echo "? Architecture rules passed."
