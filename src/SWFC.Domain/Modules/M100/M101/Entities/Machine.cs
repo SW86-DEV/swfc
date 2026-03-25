@@ -1,7 +1,9 @@
+using SWFC.Domain.Common.Errors;
 using SWFC.Domain.Common.Exceptions;
 using SWFC.Domain.Common.Security;
 using SWFC.Domain.Common.Validation;
 using SWFC.Domain.Modules.M100.M101.ValueObjects;
+using SWFC.Domain.Common.Errors;
 
 namespace SWFC.Domain.Modules.M100.M101.Entities;
 
@@ -20,8 +22,11 @@ public sealed class Machine
 
     public static Machine Create(Guid id, MachineName name, ChangeContext context)
     {
-        Guard.AgainstDefault(id, nameof(id), "MACHINE_ID_REQUIRED");
-        Guard.AgainstNull(context, nameof(context), "SEC_CONTEXT_REQUIRED");
+        
+        
+
+        Guard.AgainstDefault(id, nameof(id), ErrorCodes.Machine.IdRequired);
+        Guard.AgainstNull(context, nameof(context), ErrorCodes.General.ContextRequired);
 
         var audit = AuditInfo.From(context);
 
@@ -30,10 +35,12 @@ public sealed class Machine
 
     public void Rename(MachineName newName, ChangeContext context)
     {
-        Guard.AgainstNull(context, nameof(context), "SEC_CONTEXT_REQUIRED");
+        Guard.AgainstNull(context, nameof(context), ErrorCodes.General.ContextRequired);
 
         if (newName.Value == Name.Value)
-            throw new DomainException("MACHINE_NAME_UNCHANGED", "Machine name is already set to this value.");
+            throw new DomainException(
+                ErrorCodes.Machine.NameUnchanged,
+                "Machine name is already set to this value.");
 
         Name = newName;
         LastChange = AuditInfo.From(context);

@@ -1,4 +1,6 @@
+using SWFC.Domain.Common.Errors;
 using SWFC.Domain.Common.Validation;
+using SWFC.Domain.Common.Errors;
 
 namespace SWFC.Domain.Modules.M100.M101.ValueObjects;
 
@@ -13,8 +15,10 @@ public sealed class MachineName
 
     public static MachineName Create(string value)
     {
-        Guard.AgainstNullOrWhiteSpace(value, nameof(MachineName), "MACHINE_NAME_REQUIRED");
-        Guard.AgainstMaxLength(value, 100, nameof(MachineName), "MACHINE_NAME_TOO_LONG");
+        
+
+        Guard.AgainstNullOrWhiteSpace(value, nameof(MachineName), ErrorCodes.Machine.NameRequired);
+        Guard.AgainstMaxLength(value, 100, nameof(MachineName), ErrorCodes.Machine.NameTooLong);
 
         return new MachineName(value);
     }
