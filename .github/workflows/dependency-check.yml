@@ -23,13 +23,18 @@ jobs:
         shell: bash
         run: |
           set -e
+
+          echo "Checking for vulnerable packages..."
+
           dotnet list package --vulnerable --include-transitive > vulnerable.txt || true
 
+          echo "==== Vulnerability Report ===="
           cat vulnerable.txt
+          echo "=============================="
 
-          if grep -q "has the following vulnerable packages" vulnerable.txt; then
-            echo "? Vulnerable packages detected"
+          if grep -q "Top-level Package" vulnerable.txt || grep -q "Transitive Package" vulnerable.txt; then
+            echo "❌ Vulnerable packages detected!"
             exit 1
           fi
 
-          echo "? No vulnerable packages detected"
+          echo "✅ No vulnerable packages detected"
