@@ -14,4 +14,9 @@ public static class ErrorCodes
         public const string NameUnchanged = "MACHINE_NAME_UNCHANGED";
         public const string IdRequired = "MACHINE_ID_REQUIRED";
     }
+
+    public static class Validation
+    {
+        public const string Failed = "VALIDATION_FAILED";
+    }
 }
