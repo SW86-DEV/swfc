@@ -21,3 +21,6 @@ public sealed class SecurityContext
         return Claims.Contains(claim, StringComparer.OrdinalIgnoreCase);
     }
 }
+
+ 
+ 
